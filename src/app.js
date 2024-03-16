@@ -18,10 +18,25 @@ import passport from "passport";
 import methodOverride from "method-override";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { middLog } from "./utils/winston.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 const productos = pm.getProducts();
 const app = express();
 const port = process.env.PORT;
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: "API de Ecommerce ",
+      description: " Documentación de Ecommerce "
+    }
+  },
+  apis: ["./src/docs/*.yaml"]
+}
+
+const specs=swaggerJSDoc(swaggerOptions)
+app.use("/api-docs",swaggerUi.serve, swaggerUi.setup(specs))
 
 app.use(middLog)
 app.use(methodOverride("_method"));
